@@ -1,6 +1,7 @@
 package com.cloudapps.springbooks.service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,7 +17,8 @@ public class CommentService {
 	private AtomicLong nextId = new AtomicLong();
 	
 	public CommentService() {
-		
+		this.save(new Comment("Very interesting", "Paul", 4), 0L);
+		this.save(new Comment("I love it", "Sue", 5), 1L);
 	}
 	
 	public Collection<ConcurrentMap<Long, Comment>> findAll() {
@@ -24,6 +26,9 @@ public class CommentService {
 	}
 	
 	public Collection<Comment> findAllCommentsByBook(Long bookId){
+		if (!this.isBookPresent(bookId)) {
+			return Collections.emptyList();
+		}
 		return comments.get(bookId).values();
 	}
 	
@@ -44,13 +49,15 @@ public class CommentService {
 		this.comments.get(bookId).put(id, comment);
 	}
 	
-	public void deleteById(Long bookId, Long commentId) {
+	public boolean deleteById(Long bookId, Long commentId) {
 		if (this.isBookPresent(bookId)) {
 			this.comments.get(bookId).remove(commentId);
 			if (this.comments.get(bookId).size() == 0) {
 				this.deleteBook(bookId);
 			}
+			return true;			
 		}
+		return false;
 	}
 	
 	private void saveBook(Long bookId) {

@@ -53,4 +53,11 @@ public class Comment {
 		this.score = score;
 	}
 
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", "
+				+ "text=" + text + ", "
+				+ "username" + username + ", "
+				+ "score=" + score + "]";
+	}
 }

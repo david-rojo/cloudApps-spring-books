@@ -1,6 +1,7 @@
 package com.cloudapps.springbooks.service;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -46,8 +47,8 @@ public class BookService {
 		return books.values();
 	}
 	
-	public Book findById(long id) {
-		return books.get(id);
+	public Optional<Book> findById(long id) {
+		return Optional.ofNullable(books.get(id));
 	}
 	
 	public void save(Book book) {
@@ -56,8 +57,15 @@ public class BookService {
 		this.books.put(id, book);
 	}
 	
-	public void deleteById(long id) {
-		this.books.remove(id);
+	public boolean deleteById(long id) {
+		if (this.isBookPresent(id)) {
+			this.books.remove(id);
+			return true;
+		}
+		return false;
 	}	
 	
+	private boolean isBookPresent(Long id) {
+		return this.books.get(id) == null ? false : true; 
+	}
 }
