@@ -65,7 +65,7 @@ public class BookService {
 		return false;
 	}	
 	
-	private boolean isBookPresent(Long id) {
+	public boolean isBookPresent(Long id) {
 		return this.books.get(id) == null ? false : true; 
 	}
 }

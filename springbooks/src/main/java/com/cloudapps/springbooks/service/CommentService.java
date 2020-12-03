@@ -17,8 +17,8 @@ public class CommentService {
 	private AtomicLong nextId = new AtomicLong();
 	
 	public CommentService() {
-		this.save(new Comment("Very interesting", "Paul", 4), 0L);
-		this.save(new Comment("I love it", "Sue", 5), 1L);
+		this.save(new Comment("Very interesting", "enric", 4), 0L);
+		this.save(new Comment("I love it", "malena", 5), 1L);
 	}
 	
 	public Collection<ConcurrentMap<Long, Comment>> findAll() {
@@ -26,7 +26,7 @@ public class CommentService {
 	}
 	
 	public Collection<Comment> findAllCommentsByBook(Long bookId){
-		if (!this.isBookPresent(bookId)) {
+		if (!this.existsBook(bookId)) {
 			return Collections.emptyList();
 		}
 		return comments.get(bookId).values();
@@ -34,7 +34,7 @@ public class CommentService {
 	
 	public Comment findById(Long bookId, Long commentId) {
 		Comment comment = null;
-		if (this.isBookPresent(bookId)) {
+		if (this.existsBook(bookId)) {
 			comment = comments.get(bookId).get(commentId);
 		}
 		return comment;
@@ -43,14 +43,14 @@ public class CommentService {
 	public void save(Comment comment, Long bookId) {
 		long id = nextId.getAndIncrement();
 		comment.setId(id);
-		if (this.comments.get(bookId) == null) {
+		if (!this.existsBook(bookId)) {
 			this.saveBook(bookId);
 		}
 		this.comments.get(bookId).put(id, comment);
 	}
 	
 	public boolean deleteById(Long bookId, Long commentId) {
-		if (this.isBookPresent(bookId)) {
+		if (this.existsBook(bookId) && this.existsComment(bookId, commentId)) {
 			this.comments.get(bookId).remove(commentId);
 			if (this.comments.get(bookId).size() == 0) {
 				this.deleteBook(bookId);
@@ -68,8 +68,16 @@ public class CommentService {
 		this.comments.remove(bookId);
 	}
 	
-	private boolean isBookPresent(Long bookId) {
+	private boolean existsBook(Long bookId) {
 		return this.comments.get(bookId) == null ? false : true; 
+	}
+	
+	private boolean existsComment(Long bookId, Long commentId) {
+		return this.comments.get(bookId).get(commentId) == null ? false : true; 
+	}
+	
+	public boolean isScoreValid(int score) {
+		return score >=0 && score <=5 ? true : false;
 	}
 	
 }

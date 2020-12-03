@@ -6,17 +6,17 @@ import java.util.List;
 import com.cloudapps.springbooks.model.entity.Book;
 import com.cloudapps.springbooks.model.entity.Comment;
 
-public class FullBook {
+public class GetBookResponse {
 
 	private Book book;
 	
 	private List<Comment> comments;
 	
-	public FullBook() {
+	public GetBookResponse() {
 		comments = new ArrayList<>();
 	}
 	
-	public FullBook(Book book, List<Comment> comments) {
+	public GetBookResponse(Book book, List<Comment> comments) {
 		this.book = book;
 		this.comments = comments;
 	}

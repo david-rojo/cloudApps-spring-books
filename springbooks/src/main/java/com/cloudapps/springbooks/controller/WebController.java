@@ -22,7 +22,7 @@ public class WebController {
 	@GetMapping("/")
 	public String showBooks(Model model, HttpSession session) {
 
-		model.addAttribute("posts", bookService.findAll());
+		model.addAttribute("books", bookService.findAll());
 		model.addAttribute("welcome", session.isNew());
 
 		return "index";

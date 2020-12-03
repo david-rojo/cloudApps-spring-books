@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cloudapps.springbooks.model.api.BookSummary;
-import com.cloudapps.springbooks.model.api.FullBook;
+import com.cloudapps.springbooks.model.api.BookSummaryResponse;
+import com.cloudapps.springbooks.model.api.GetBookResponse;
+import com.cloudapps.springbooks.model.api.PostBookRequest;
+import com.cloudapps.springbooks.model.api.PostCommentRequest;
 import com.cloudapps.springbooks.model.entity.Book;
 import com.cloudapps.springbooks.model.entity.Comment;
 import com.cloudapps.springbooks.service.BookService;
@@ -26,7 +28,7 @@ import com.cloudapps.springbooks.service.CommentService;
 
 @RestController
 @RequestMapping (value="springbooks")
-public class RestApiController {
+public class RestApiController implements RestApi {
 
 	private Logger log = LoggerFactory.getLogger(RestApiController.class);
 	
@@ -37,25 +39,25 @@ public class RestApiController {
 	private CommentService commentsService;
 	
 	@GetMapping(value="books")
-	public ResponseEntity<List<BookSummary>> getBooks() {
+	public ResponseEntity<List<BookSummaryResponse>> getBooks() {
 		log.info("getBooks method invoked");
-		List<BookSummary> bookSummaries = new ArrayList<>();
+		List<BookSummaryResponse> responseList = new ArrayList<>();
 		this.bookService.findAll()
-			.forEach(book -> bookSummaries.add(new BookSummary(book.getId(), book.getTitle())));
-		return ResponseEntity.status(HttpStatus.OK).body(bookSummaries);		
+			.forEach(book -> responseList.add(new BookSummaryResponse(book.getId(), book.getTitle())));
+		return ResponseEntity.status(HttpStatus.OK).body(responseList);		
 	}
 	
 	@GetMapping(value="books/{bookId}")
-	public ResponseEntity<FullBook> getBook(@PathVariable(value="bookId") Long bookId) {
+	public ResponseEntity<GetBookResponse> getBook(@PathVariable(value="bookId") Long bookId) {
 		log.info("getBook method invoked");
 		log.info("parameters received => "
 				+ "\"bookId\" = " + bookId);
-		FullBook fullBook = new FullBook();
+		GetBookResponse response = new GetBookResponse();
 		Optional<Book> book = this.bookService.findById(bookId);
 		if (book.isPresent()) {
-			fullBook.setBook(book.get());
-			this.commentsService.findAllCommentsByBook(bookId).forEach(comment -> fullBook.addComment(comment));
-			return ResponseEntity.status(HttpStatus.OK).body(fullBook);
+			response.setBook(book.get());
+			this.commentsService.findAllCommentsByBook(bookId).forEach(comment -> response.addComment(comment));
+			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);		
 	}
@@ -65,32 +67,50 @@ public class RestApiController {
 		log.info("getCommentsFromBook method invoked");
 		log.info("parameters received => "
 				+ "\"bookId\" = " + bookId);
-		List<Comment> comments = new ArrayList<>();
-		this.commentsService.findAllCommentsByBook(bookId)
-			.forEach(comment -> comments.add(comment));
-		return ResponseEntity.status(HttpStatus.OK).body(comments);		
+		if (this.bookService.findById(bookId).isPresent()) {
+			List<Comment> responseList = new ArrayList<>();
+			this.commentsService.findAllCommentsByBook(bookId)
+				.forEach(comment -> responseList.add(comment));
+			return ResponseEntity.status(HttpStatus.OK).body(responseList);	
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(List.of());				
 	}
 	
 	@PostMapping(value="books")
-	public ResponseEntity<String> postBook(@RequestBody Book book) {
+	public ResponseEntity<String> postBook(@RequestBody PostBookRequest postBookRequest) {
 		log.info("postBook method invoked");
 		log.info("parameters received => "
-				+ "\"book\" = " + book.toString());
-		bookService.save(book);
-		return ResponseEntity.status(HttpStatus.OK).body("Book added");		
+				+ "\"postBookRequest\" = " + postBookRequest.toString());
+		bookService.save(new Book(
+				postBookRequest.getTitle(),
+				postBookRequest.getSummary(),
+				postBookRequest.getAuthor(),
+				postBookRequest.getPublisher(),
+				postBookRequest.getPublicationYear()));
+		return ResponseEntity.status(HttpStatus.CREATED).body("Book created");		
 	}
 	
 	@PostMapping(value="books/{bookId}/comments")
-	public ResponseEntity<String> postComment(@PathVariable(value="bookId") Long bookId, @RequestBody Comment comment) {
+	public ResponseEntity<String> postComment(@PathVariable(value="bookId") Long bookId,
+			@RequestBody PostCommentRequest postCommentRequest) {
 		log.info("postComment method invoked");
 		log.info("parameters received => "
 				+ "\"bookId\" = " + bookId + ", "
-				+ "\"comment\" = " + comment.toString());
-		commentsService.save(comment, bookId);
-		return ResponseEntity.status(HttpStatus.OK).body("Comment added for bookId " + bookId);		
+				+ "\"postCommentRequest\" = " + postCommentRequest.toString());
+		if (this.commentsService.isScoreValid(postCommentRequest.getScore())) {
+			commentsService.save(new Comment(
+					postCommentRequest.getText(),
+					postCommentRequest.getUsername(),
+					postCommentRequest.getScore())
+				, bookId);
+			return ResponseEntity.status(HttpStatus.CREATED).body("Comment created for bookId " + bookId);
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid score: " + postCommentRequest.getScore() + 
+					". Valid scores: 0, 1, 2, 3, 4, 5");
+		}
 	}
 	
-	@DeleteMapping(value="books/{bookId}/comments/{commentId}" )
+	@DeleteMapping(value="books/{bookId}/comments/{commentId}")
 	public ResponseEntity<String> deleteComment(
 			@PathVariable(value="bookId") Long bookId, 
 			@PathVariable(value="commentId") Long commentId) {

@@ -1,16 +1,16 @@
 package com.cloudapps.springbooks.model.api;
 
-public class BookSummary {
+public class BookSummaryResponse {
 
 	private Long id;	
 	
 	private String title;
 	
-	public BookSummary() {
+	public BookSummaryResponse() {
 		
 	}
 	
-	public BookSummary(Long id, String title) {
+	public BookSummaryResponse(Long id, String title) {
 		super();
 		this.id = id;
 		this.title = title;
