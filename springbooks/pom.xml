@@ -12,9 +12,10 @@
 	<artifactId>springbooks</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springbooks</name>
-	<description>Demo project for Spring Boot</description>
+	<packaging>jar</packaging>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
 	</properties>
 
@@ -38,6 +39,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.springdoc</groupId>
+		    <artifactId>springdoc-openapi-ui</artifactId>
+		    <version>1.5.0</version>
 		</dependency>
 	</dependencies>
 
