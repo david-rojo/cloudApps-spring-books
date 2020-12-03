@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
-import com.cloudapps.springbooks.model.Comment;
+import com.cloudapps.springbooks.model.entity.Comment;
 
 @Service
 public class CommentService {

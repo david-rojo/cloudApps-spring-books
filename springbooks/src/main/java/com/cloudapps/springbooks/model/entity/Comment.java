@@ -1,4 +1,4 @@
-package com.cloudapps.springbooks.model;
+package com.cloudapps.springbooks.model.entity;
 
 public class Comment {
 	

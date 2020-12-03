@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
-import com.cloudapps.springbooks.model.Book;
+import com.cloudapps.springbooks.model.entity.Book;
 
 @Service
 public class BookService {
