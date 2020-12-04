@@ -1,5 +1,8 @@
 package com.cloudapps.springbooks.controller;
 
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,52 +80,60 @@ public class RestApiController implements RestApi {
 	}
 	
 	@PostMapping(value="books")
-	public ResponseEntity<String> postBook(@RequestBody PostBookRequest postBookRequest) {
+	public ResponseEntity<Book> postBook(@RequestBody PostBookRequest postBookRequest) {
 		log.info("postBook method invoked");
 		log.info("parameters received => "
 				+ "\"postBookRequest\" = " + postBookRequest.toString());
-		bookService.save(new Book(
+		Book savedBook = bookService.save(new Book(
 				postBookRequest.getTitle(),
 				postBookRequest.getSummary(),
 				postBookRequest.getAuthor(),
 				postBookRequest.getPublisher(),
 				postBookRequest.getPublicationYear()));
-		return ResponseEntity.status(HttpStatus.CREATED).body("Book created");		
+		URI location = fromCurrentRequest().path("/{id}")
+				.buildAndExpand(savedBook.getId()).toUri();
+		return ResponseEntity.created(location).body(savedBook);		
 	}
 	
 	@PostMapping(value="books/{bookId}/comments")
-	public ResponseEntity<String> postComment(@PathVariable(value="bookId") Long bookId,
+	public ResponseEntity<Comment> postComment(@PathVariable(value="bookId") Long bookId,
 			@RequestBody PostCommentRequest postCommentRequest) {
 		log.info("postComment method invoked");
 		log.info("parameters received => "
 				+ "\"bookId\" = " + bookId + ", "
 				+ "\"postCommentRequest\" = " + postCommentRequest.toString());
 		if (this.commentsService.isScoreValid(postCommentRequest.getScore())) {
-			commentsService.save(new Comment(
+			Comment savedComment = commentsService.save(new Comment(
 					postCommentRequest.getText(),
 					postCommentRequest.getUsername(),
 					postCommentRequest.getScore())
 				, bookId);
-			return ResponseEntity.status(HttpStatus.CREATED).body("Comment created for bookId " + bookId);
+			URI location = fromCurrentRequest().path("/{id}")
+					.buildAndExpand(savedComment.getId()).toUri();
+			return ResponseEntity.created(location).body(savedComment);
 		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid score: " + postCommentRequest.getScore() + 
-					". Valid scores: 0, 1, 2, 3, 4, 5");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Comment.INVALID_SCORE_COMMENT);
 		}
 	}
 	
 	@DeleteMapping(value="books/{bookId}/comments/{commentId}")
-	public ResponseEntity<String> deleteComment(
+	public ResponseEntity<Comment> deleteComment(
 			@PathVariable(value="bookId") Long bookId, 
 			@PathVariable(value="commentId") Long commentId) {
 		log.info("deleteComment method invoked");
 		log.info("parameters received => "
 				+ "\"bookId\" = " + bookId + ", "
 				+ "\"commentId\" = " + commentId);
-		Boolean deleted = commentsService.deleteById(bookId, commentId);
-		if (deleted) {
-			return ResponseEntity.status(HttpStatus.OK).body("deleted");
+		
+		Comment comment = commentsService.findById(bookId, commentId);
+		
+		if (comment != null) {
+			commentsService.deleteById(bookId, commentId);
+			return ResponseEntity.ok(comment);
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+		else {
+			return ResponseEntity.notFound().build();
+		}
 	}	
 	
 }

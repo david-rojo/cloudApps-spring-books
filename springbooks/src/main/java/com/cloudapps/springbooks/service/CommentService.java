@@ -40,24 +40,23 @@ public class CommentService {
 		return comment;
 	}
 	
-	public void save(Comment comment, Long bookId) {
+	public Comment save(Comment comment, Long bookId) {
 		long id = nextId.getAndIncrement();
 		comment.setId(id);
 		if (!this.existsBook(bookId)) {
 			this.saveBook(bookId);
 		}
 		this.comments.get(bookId).put(id, comment);
+		return comment;
 	}
 	
-	public boolean deleteById(Long bookId, Long commentId) {
+	public void deleteById(Long bookId, Long commentId) {
 		if (this.existsBook(bookId) && this.existsComment(bookId, commentId)) {
 			this.comments.get(bookId).remove(commentId);
 			if (this.comments.get(bookId).size() == 0) {
 				this.deleteBook(bookId);
-			}
-			return true;			
+			}		
 		}
-		return false;
 	}
 	
 	private void saveBook(Long bookId) {

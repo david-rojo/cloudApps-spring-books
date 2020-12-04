@@ -2,6 +2,9 @@ package com.cloudapps.springbooks.model.entity;
 
 public class Comment {
 	
+	public static Comment INVALID_SCORE_COMMENT = new Comment(
+			"Invalid score. Valid scores: 0, 1, 2, 3, 4, 5", "", 0);
+	
 	private Long id;
 	
 	private String text;

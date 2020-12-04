@@ -51,10 +51,11 @@ public class BookService {
 		return Optional.ofNullable(books.get(id));
 	}
 	
-	public void save(Book book) {
+	public Book save(Book book) {
 		long id = nextId.getAndIncrement();
 		book.setId(id);
 		this.books.put(id, book);
+		return book;
 	}
 	
 	public boolean deleteById(long id) {
