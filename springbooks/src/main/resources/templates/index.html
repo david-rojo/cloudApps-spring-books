@@ -1,0 +1,16 @@
+<html>
+<body>
+
+	<h1>Book List</h1>
+	{{#books}}
+		<b>Id: </b>{{id}}
+		<b>Title: </b><a href="book/{{id}}">{{title}}</a>
+		<br>
+		<hr>
+	{{/books}}
+	
+	<br>
+	<a href="book/new">New Book</a>
+	
+</body>
+</html>
