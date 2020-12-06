@@ -15,17 +15,19 @@
 	<h3>New comment</h3>
 	
 	<form action="../book/{{bookInfo.book.id}}/comment/new" method="post">
-		<p>Username: </p>
-		<input type='text' name='username'/>
+		<p>User: 
+			<input type='text' name='user'/>
+		</p>
 		<p>Score:
-		<select id="score" name="score">
-    		<option value="0">0</option>
-    		<option value="1">1</option>
-    		<option value="2">2</option>
-    		<option value="3">3</option>
-    		<option value="4">4</option>
-    		<option value="5">5</option>
-  		</select></p>
+			<select id="score" name="score">
+    			<option value="0">0</option>
+    			<option value="1">1</option>
+    			<option value="2">2</option>
+    			<option value="3">3</option>
+    			<option value="4">4</option>
+    			<option value="5">5</option>
+  			</select>
+  		</p>
 		<p>Comment:</p>
 		<textarea name='text' rows=5 cols=80></textarea>
 		<br><br>
@@ -38,7 +40,7 @@
 	
 	{{#bookInfo.comments}}
 		<p>
-			<b>{{-index}}. {{username}}</b> (score: {{score}}):
+			<b>{{-index}}. {{user}}</b> (score: {{score}}):
 			<br>
 			{{text}}
 			<br>

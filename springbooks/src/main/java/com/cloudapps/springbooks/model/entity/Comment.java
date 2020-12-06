@@ -9,7 +9,7 @@ public class Comment {
 	
 	private String text;
 	
-	private String username;
+	private String user;
 	
 	private int score;
 	
@@ -17,10 +17,10 @@ public class Comment {
 		
 	}
 	
-	public Comment(String text, String username, int score) {
+	public Comment(String text, String user, int score) {
 		super();
 		this.text = text;
-		this.username = username;
+		this.user = user;
 		this.score = score;
 	}
 
@@ -40,12 +40,12 @@ public class Comment {
 		this.text = text;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUser() {
+		return user;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public int getScore() {
@@ -60,7 +60,7 @@ public class Comment {
 	public String toString() {
 		return "Comment [id=" + id + ", "
 				+ "text=" + text + ", "
-				+ "username" + username + ", "
+				+ "user" + user + ", "
 				+ "score=" + score + "]";
 	}
 }

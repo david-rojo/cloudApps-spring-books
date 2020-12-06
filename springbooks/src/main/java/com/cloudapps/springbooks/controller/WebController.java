@@ -86,11 +86,11 @@ public class WebController {
 	}
 	
 	@PostMapping("/book/{bookId}/comment/new")
-	public String newComment(Model model, @PathVariable int bookId, @RequestParam String username, @RequestParam String score,
+	public String newComment(Model model, @PathVariable int bookId, @RequestParam String user, @RequestParam String score,
 			@RequestParam String text) {
 		
 		log.info("newComment method invoked");
-		Comment savedComment = this.commentsService.save(new Comment(text, username, Integer.parseInt(score)), Long.valueOf(bookId));
+		Comment savedComment = this.commentsService.save(new Comment(text, user, Integer.parseInt(score)), Long.valueOf(bookId));
 		model.addAttribute("savedComment", savedComment);
 		String bookTitle = this.bookService.findById(Long.valueOf(bookId)).get().getTitle();
 		model.addAttribute("bookTitle", bookTitle);

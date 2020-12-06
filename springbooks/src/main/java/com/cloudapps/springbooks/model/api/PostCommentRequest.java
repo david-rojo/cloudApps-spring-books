@@ -4,7 +4,7 @@ public class PostCommentRequest {
 		
 	private String text;
 	
-	private String username;
+	private String user;
 	
 	private int score;
 	
@@ -12,10 +12,10 @@ public class PostCommentRequest {
 		
 	}
 	
-	public PostCommentRequest(String text, String username, int score) {
+	public PostCommentRequest(String text, String user, int score) {
 		super();
 		this.text = text;
-		this.username = username;
+		this.user = user;
 		this.score = score;
 	}
 
@@ -27,12 +27,12 @@ public class PostCommentRequest {
 		this.text = text;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUser() {
+		return user;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public int getScore() {
@@ -46,7 +46,7 @@ public class PostCommentRequest {
 	@Override
 	public String toString() {
 		return "PostCommentRequest [text=" + text + ", "
-				+ "username" + username + ", "
+				+ "user" + user + ", "
 				+ "score=" + score + "]";
 	}
 }

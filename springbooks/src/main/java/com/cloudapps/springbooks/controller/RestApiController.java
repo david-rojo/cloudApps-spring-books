@@ -105,7 +105,7 @@ public class RestApiController implements RestApi {
 		if (this.commentsService.isScoreValid(postCommentRequest.getScore())) {
 			Comment savedComment = commentsService.save(new Comment(
 					postCommentRequest.getText(),
-					postCommentRequest.getUsername(),
+					postCommentRequest.getUser(),
 					postCommentRequest.getScore())
 				, bookId);
 			URI location = fromCurrentRequest().path("/{id}")
