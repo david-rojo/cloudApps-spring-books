@@ -1,16 +1,18 @@
-<html>
-<body>
+{{>header}}
 
-	<h1>Book List</h1>
+	<h2>Book list</h2>
+	
 	{{#books}}
-		<b>Id: </b>{{id}}
-		<b>Title: </b><a href="book/{{id}}">{{title}}</a>
+		{{-index}}. <a href="book/{{id}}">{{title}}</a>
 		<br>
 		<hr>
 	{{/books}}
 	
-	<br>
-	<a href="book/new">New Book</a>
+	{{^books}}
+	<p>No books yet.</p>
+	{{/books}}
 	
-</body>
-</html>
+	<br>
+	<a href="new_book.html">New Book</a>
+	
+{{>footer}}

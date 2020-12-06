@@ -1,0 +1,60 @@
+{{>header}}
+
+	<h2>Book information</h2>
+	
+	<ul>
+  		<li><u>Title:</u> {{bookInfo.book.title}}</li>
+  		<li><u>Author:</u> {{bookInfo.book.author}}</li>
+  		<li><u>Summary:</u> {{bookInfo.book.summary}}</li>
+  		<li><u>Publisher:</u> {{bookInfo.book.publisher}}</li>
+  		<li><u>Publication year:</u> {{bookInfo.book.publicationYear}}</li>
+	</ul>
+	
+	<hr>
+	
+	<h3>New comment</h3>
+	
+	<form action="../book/{{bookInfo.book.id}}/comment/new" method="post">
+		<p>Username: </p>
+		<input type='text' name='username'/>
+		<p>Score:
+		<select id="score" name="score">
+    		<option value="0">0</option>
+    		<option value="1">1</option>
+    		<option value="2">2</option>
+    		<option value="3">3</option>
+    		<option value="4">4</option>
+    		<option value="5">5</option>
+  		</select></p>
+		<p>Comment:</p>
+		<textarea name='text' rows=5 cols=80></textarea>
+		<br><br>
+		<input type='submit' value='Save'/>
+	</form>
+	
+	<hr>
+	
+	<h3>Comments</h3>
+	
+	{{#bookInfo.comments}}
+		<p>
+			<b>{{-index}}. {{username}}</b> (score: {{score}}):
+			<br>
+			{{text}}
+			<br>
+			<form action="../book/{{bookInfo.book.id}}/comment/{{id}}/delete" method="delete">
+    			<input type="submit" value="Delete" />
+			</form> 
+		<p>
+	{{/bookInfo.comments}}
+	
+	{{^bookInfo.comments}}
+	<p>No comments yet.</p>
+	{{/bookInfo.comments}}
+	
+	<hr>
+	
+	<br>
+	<a href="/">Back</a>
+	
+{{>footer}}

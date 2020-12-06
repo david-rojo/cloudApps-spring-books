@@ -1,0 +1,18 @@
+{{>header}}
+
+	<h2>Comment saved</h2>
+	
+	<p>You have successfully saved a new comment for the book "{{bookTitle}}" with the following details:</p>
+	
+	<ul>
+		<li><u>Username:</u> {{savedComment.username}}</li>
+  		<li><u>Score:</u> {{savedComment.score}}</li>
+  		<li><u>Comment:</u> {{savedComment.text}}</li>
+	</ul>
+	
+	<br>
+	<a href="../../../../book/{{bookId}}">Back to Book Information</a>
+	<br>
+	<a href="/">Back</a>
+	
+{{>footer}}
