@@ -90,7 +90,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/springbooks/books/1/comments/1",
+					"raw": "localhost:8080/springbooks/books/0/comments/0",
 					"host": [
 						"localhost"
 					],
@@ -98,9 +98,9 @@
 					"path": [
 						"springbooks",
 						"books",
-						"1",
+						"0",
 						"comments",
-						"1"
+						"0"
 					]
 				}
 			},
@@ -127,7 +127,7 @@
 					"raw": "{\n  \"text\": \"very good, I enjoyed it a lot reading it\",\n  \"username\": \"david\",\n  \"score\": 4\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/springbooks/books/1/comments",
+					"raw": "localhost:8080/springbooks/books/0/comments",
 					"host": [
 						"localhost"
 					],
@@ -135,7 +135,7 @@
 					"path": [
 						"springbooks",
 						"books",
-						"1",
+						"0",
 						"comments"
 					]
 				}
@@ -199,7 +199,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/springbooks/books/1",
+					"raw": "localhost:8080/springbooks/books/0",
 					"host": [
 						"localhost"
 					],
@@ -207,7 +207,7 @@
 					"path": [
 						"springbooks",
 						"books",
-						"1"
+						"0"
 					]
 				}
 			},
