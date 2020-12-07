@@ -6,6 +6,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.cloudapps.springbooks.model.entity.Comment;
@@ -13,12 +17,22 @@ import com.cloudapps.springbooks.model.entity.Comment;
 @Service
 public class CommentService {
 
+	private Logger log = LoggerFactory.getLogger(CommentService.class);
+	
 	private ConcurrentMap<Long, ConcurrentMap<Long, Comment>> comments = new ConcurrentHashMap<>();
 	private AtomicLong nextId = new AtomicLong();
 	
-	public CommentService() {
-		this.save(new Comment("Very interesting", "enric", 4), 0L);
-		this.save(new Comment("I love it", "malena", 5), 1L);
+	@Autowired
+	public CommentService(@Value("${springbooks.config.startup.dataload:false}") boolean startupDataLoad) {
+		if (startupDataLoad) {
+			this.save(new Comment("Very interesting", "enric", 4), 0L);
+			this.save(new Comment("I love it", "malena", 5), 1L);
+			log.info("Startup comment load completed");
+		}
+		else {
+			log.info("Startup comment load disabled");
+		}
+		
 	}
 	
 	public Collection<ConcurrentMap<Long, Comment>> findAll() {

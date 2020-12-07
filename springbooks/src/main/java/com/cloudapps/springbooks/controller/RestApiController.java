@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +35,9 @@ import com.cloudapps.springbooks.service.CommentService;
 public class RestApiController implements RestApi {
 
 	private Logger log = LoggerFactory.getLogger(RestApiController.class);
+	
+	@Value("${springbooks.config.startup.dataload}")
+	private String strStartupDataLoad;
 	
 	@Autowired
 	private BookService bookService;
