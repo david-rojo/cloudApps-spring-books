@@ -16,7 +16,7 @@
 	
 	<form action="../book/{{bookInfo.book.id}}/comment/new" method="post">
 		<p>User: 
-			<input type='text' name='user'/>
+			<input type='text' name='user' value='{{#user}}{{.}}{{/user}}'/>
 		</p>
 		<p>Score:
 			<select id="score" name="score">

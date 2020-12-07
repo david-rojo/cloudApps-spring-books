@@ -22,11 +22,15 @@ import com.cloudapps.springbooks.model.entity.Book;
 import com.cloudapps.springbooks.model.entity.Comment;
 import com.cloudapps.springbooks.service.BookService;
 import com.cloudapps.springbooks.service.CommentService;
+import com.cloudapps.springbooks.service.UserSession;
 
 @Controller
 public class WebController {
 
 	private Logger log = LoggerFactory.getLogger(RestApiController.class);
+	
+	@Autowired
+	private UserSession userSession;
 	
 	@Autowired
 	private BookService bookService;
@@ -43,6 +47,8 @@ public class WebController {
 		this.bookService.findAll()
 			.forEach(book -> books.add(new BookSummaryResponse(book.getId(), book.getTitle())));
 		model.addAttribute("books", books);
+		
+		model.addAttribute("welcome", session.isNew());
 
 		return "index";
 	}
@@ -58,6 +64,8 @@ public class WebController {
 		this.commentsService.findAllCommentsByBook(Long.valueOf(bookId))
 			.forEach(comment -> bookInfo.addComment(comment));
 		model.addAttribute("bookInfo", bookInfo);
+		
+		model.addAttribute("user", userSession.getUser());
 
 		return "show_book";
 	}
@@ -95,6 +103,8 @@ public class WebController {
 		String bookTitle = this.bookService.findById(Long.valueOf(bookId)).get().getTitle();
 		model.addAttribute("bookTitle", bookTitle);
 		model.addAttribute("bookId", bookId);
+		
+		userSession.setUser(user);
 		
 		return "saved_comment";
 	}
