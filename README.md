@@ -12,7 +12,7 @@ Once that the repository has been cloned:
 $ git clone https://github.com/david-rojo/cloudApps-spring-books.git
 ```
 
-import the project in your IDE and to execute it, right click of the mouse in **springbooks** folder in Package Explorer window and select *Run as > Spring Boot App*
+import the project in your IDE ([pom.xml](springbooks/pom.xml) file is located in [springbooks](springbooks) folder) and to execute it, right click of the mouse in **springbooks** folder in Package Explorer window and select *Run as > Spring Boot App*
 
 You can access to its exposed frontend here: [http://localhost:8080/](http://localhost:8080/)
 
