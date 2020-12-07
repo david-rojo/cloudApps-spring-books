@@ -107,14 +107,18 @@ public class RestApiController implements RestApi {
 				+ "\"bookId\" = " + bookId + ", "
 				+ "\"postCommentRequest\" = " + postCommentRequest.toString());
 		if (this.commentsService.isScoreValid(postCommentRequest.getScore())) {
-			Comment savedComment = commentsService.save(new Comment(
-					postCommentRequest.getText(),
-					postCommentRequest.getUser(),
-					postCommentRequest.getScore())
-				, bookId);
-			URI location = fromCurrentRequest().path("/{id}")
-					.buildAndExpand(savedComment.getId()).toUri();
-			return ResponseEntity.created(location).body(savedComment);
+			if (this.bookService.findById(Long.valueOf(bookId)).isPresent()) {
+				Comment savedComment = commentsService.save(new Comment(
+						postCommentRequest.getText(),
+						postCommentRequest.getUser(),
+						postCommentRequest.getScore())
+					, bookId);
+				URI location = fromCurrentRequest().path("/{id}")
+						.buildAndExpand(savedComment.getId()).toUri();
+				return ResponseEntity.created(location).body(savedComment);
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Comment.NON_EXISTENT_BOOKID_COMMENT);
+			}			
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Comment.INVALID_SCORE_COMMENT);
 		}
