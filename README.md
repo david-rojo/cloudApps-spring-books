@@ -1,6 +1,6 @@
 # Springbooks
 
-This is a Java 11 project that exposes a REST API documented with OpenAPI and a basic web frontend using Mustache templates, developed with SpringBoot 2.4.0 with customizable data loading on startup. All the information is stored in memory, any persisntency is implemented. 
+This is a Java 11 project that exposes a REST API documented with [OpenAPI](https://www.openapis.org/) and a basic web frontend using [Mustache](https://mustache.github.io/) templates, developed with [SpringBoot](https://spring.io/projects/spring-boot) 2.4.0 with customizable data loading on startup. All the information is stored in memory, any persisntency is implemented. 
 
 It implements the following [scenario](doc/scenario.md). It has been developed using [Spring Tool Suite 4](https://spring.io/tools)
 
@@ -26,7 +26,7 @@ and also, as requested, to its REST API: [http://localhost:8080/springbooks-mana
 
 Going beyond the scenario requested, an initial data loading of some data has been implemented, specifically two books with one comment associated to each book.
 
-The default value is false, but if is needed to enable it, you have to set ```springbooks.config.startup.dataload``` property to ```true``` in [springbooks.properties](springbooks/src/main/resources/springbooks.properties) file
+The default value is ```false```, but if is needed to enable it, you have to set ```springbooks.config.startup.dataload``` property to ```true``` in [springbooks.properties](springbooks/src/main/resources/springbooks.properties) file
 
 ## 3. Testing the scenario
 
