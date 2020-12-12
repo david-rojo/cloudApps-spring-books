@@ -1,10 +1,10 @@
-package com.cloudapps.springbooks.model.api;
+package com.cloudapps.springbooks.model.api.request;
 
 public class PostCommentRequest {
 		
 	private String text;
 	
-	private String user;
+	private String nick;
 	
 	private int score;
 	
@@ -12,10 +12,10 @@ public class PostCommentRequest {
 		
 	}
 	
-	public PostCommentRequest(String text, String user, int score) {
+	public PostCommentRequest(String text, String nick, int score) {
 		super();
 		this.text = text;
-		this.user = user;
+		this.nick = nick;
 		this.score = score;
 	}
 
@@ -27,14 +27,6 @@ public class PostCommentRequest {
 		this.text = text;
 	}
 
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
 	public int getScore() {
 		return score;
 	}
@@ -43,10 +35,18 @@ public class PostCommentRequest {
 		this.score = score;
 	}
 
+	public String getNick() {
+		return nick;
+	}
+
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+
 	@Override
 	public String toString() {
 		return "PostCommentRequest [text=" + text + ", "
-				+ "user" + user + ", "
+				+ "nick" + nick + ", "
 				+ "score=" + score + "]";
 	}
 }

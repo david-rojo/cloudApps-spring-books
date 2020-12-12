@@ -46,4 +46,8 @@ public class CommentService {
 		return score >=0 && score <=5 ? true : false;
 	}
 	
+	public List<Comment> findByNick(String nick) {
+		return this.comments.findByUserNick(nick);
+	}
+	
 }

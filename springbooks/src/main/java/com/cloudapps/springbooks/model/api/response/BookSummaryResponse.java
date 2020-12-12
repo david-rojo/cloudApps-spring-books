@@ -1,4 +1,4 @@
-package com.cloudapps.springbooks.model.api;
+package com.cloudapps.springbooks.model.api.response;
 
 public class BookSummaryResponse {
 

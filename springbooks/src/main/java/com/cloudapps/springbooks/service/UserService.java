@@ -50,4 +50,8 @@ public class UserService {
 		this.users.findById(updatedUser.getId()).orElseThrow();
 		this.users.save(updatedUser);				
 	}
+	
+	public void delete(User user) {
+		this.users.delete(user);
+	}
 }

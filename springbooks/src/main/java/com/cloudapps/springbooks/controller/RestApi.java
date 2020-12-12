@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.cloudapps.springbooks.model.api.BookSummaryResponse;
-import com.cloudapps.springbooks.model.api.PostBookRequest;
-import com.cloudapps.springbooks.model.api.PostCommentRequest;
-import com.cloudapps.springbooks.model.api.PostUserRequest;
-import com.cloudapps.springbooks.model.api.UpdateUserEmailRequest;
+import com.cloudapps.springbooks.model.api.request.PostBookRequest;
+import com.cloudapps.springbooks.model.api.request.PostCommentRequest;
+import com.cloudapps.springbooks.model.api.request.PostUserRequest;
+import com.cloudapps.springbooks.model.api.request.UpdateUserEmailRequest;
+import com.cloudapps.springbooks.model.api.response.BookSummaryResponse;
+import com.cloudapps.springbooks.model.api.response.GetBookResponse;
+import com.cloudapps.springbooks.model.api.response.GetCommentsFromUserResponseElement;
 import com.cloudapps.springbooks.model.entity.Book;
 import com.cloudapps.springbooks.model.entity.Comment;
 import com.cloudapps.springbooks.model.entity.User;
@@ -45,10 +47,10 @@ public interface RestApi {
 			tags = { "books" })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "successful operation", 
-                content = @Content(array = @ArraySchema(schema = @Schema(implementation = Book.class)))),
+                content = @Content(array = @ArraySchema(schema = @Schema(implementation = GetBookResponse.class)))),
         @ApiResponse(responseCode = "404", description = "book not found") })
 	@GetMapping(value="books/{bookId}")
-	public ResponseEntity<Book> getBook(@PathVariable(value="bookId") Long bookId);
+	public ResponseEntity<GetBookResponse> getBook(@PathVariable(value="bookId") Long bookId);
 	
 	@Operation(
 			summary = "Add a new book", 
@@ -120,5 +122,29 @@ public interface RestApi {
         @ApiResponse(responseCode = "500", description = "internal server error") })
 	@PatchMapping(path = "users/{userId}")
 	public ResponseEntity<User> updateUserEmail(@PathVariable long userId, @RequestBody UpdateUserEmailRequest request);
+	
+	@Operation(
+			summary = "Deletes a user", 
+			description = "Deletes a user", 
+			tags = { "users" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "user successfully deleted",
+        		content = @Content(schema = @Schema(implementation = User.class))),
+        @ApiResponse(responseCode = "400", description = "user with comments"),
+        @ApiResponse(responseCode = "404", description = "user not found") })
+	@DeleteMapping(value="users/{userId}")
+	public ResponseEntity<User> deleteUser(@PathVariable(value="userId") Long userId);
+	
+	@Operation(
+			summary = "Find all comments from a user", 
+			description = "Find all comments from a user", 
+			tags = { "users" })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "successful operation", 
+                content = @Content(array = @ArraySchema(schema = @Schema(implementation = GetCommentsFromUserResponseElement.class)))),
+        @ApiResponse(responseCode = "500", description = "internal server error") })
+	@GetMapping(value="users/{userId}/comments")
+	public ResponseEntity<List<GetCommentsFromUserResponseElement>> getCommentsFromUser(
+			@PathVariable(value="userId") Long userId);
 	
 }

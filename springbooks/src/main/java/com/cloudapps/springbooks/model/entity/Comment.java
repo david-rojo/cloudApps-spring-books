@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,11 +13,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Comment {
 	
 	public static Comment INVALID_SCORE_COMMENT = new Comment(
-			"Invalid score. Valid scores: 0, 1, 2, 3, 4, 5", "", 0);
+			"Invalid score. Valid scores: 0, 1, 2, 3, 4, 5", 0);
 	
 	public static Comment NON_EXISTENT_BOOKID_COMMENT = new Comment(
 			"Any book in the system has as id the requested bookId, the comment must be associated to an existing book. "
-			+ "Please verify it", "", 0);
+			+ "Please verify it", 0);
+	
+	public static Comment NON_EXISTENT_NICK_COMMENT = new Comment(
+			"Any user in the system has this nick, the comment must be associated to an existing nick. "
+			+ "Please verify it", 0);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +29,8 @@ public class Comment {
 	
 	private String text;
 	
-	private String user;
+	@OneToOne
+	private User user;
 	
 	private int score;
 	
@@ -36,10 +42,9 @@ public class Comment {
 		
 	}
 	
-	public Comment(String text, String user, int score) {
+	public Comment(String text, int score) {
 		super();
 		this.text = text;
-		this.user = user;
 		this.score = score;
 	}
 
@@ -59,11 +64,11 @@ public class Comment {
 		this.text = text;
 	}
 
-	public String getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(String user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
