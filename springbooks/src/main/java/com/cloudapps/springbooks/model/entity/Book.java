@@ -1,7 +1,20 @@
 package com.cloudapps.springbooks.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Book {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	private String title;
@@ -14,7 +27,10 @@ public class Book {
 	
 	private int publicationYear;
 	
-	public Book() {
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Comment> comments = new ArrayList<>();
+	
+	protected Book() {
 		
 	}
 
@@ -73,6 +89,20 @@ public class Book {
 
 	public void setPublicationYear(int publicationYear) {
 		this.publicationYear = publicationYear;
+	}
+	
+	public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setBook(this);
+    }
+ 
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        comment.setBook(null);
+    }
+
+	public List<Comment> getComments() {
+		return comments;
 	}
 	
 	@Override

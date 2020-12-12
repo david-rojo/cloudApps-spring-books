@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cloudapps.springbooks.model.entity.Book;
-import com.cloudapps.springbooks.model.entity.Comment;
 
 public class GetBookResponse {
 
 	private Book book;
 	
-	private List<Comment> comments;
+	private List<GetBookResponseComment> comments;
 	
 	public GetBookResponse() {
 		comments = new ArrayList<>();
 	}
 	
-	public GetBookResponse(Book book, List<Comment> comments) {
+	public GetBookResponse(Book book, List<GetBookResponseComment> comments) {
 		this.book = book;
 		this.comments = comments;
 	}
@@ -29,15 +28,15 @@ public class GetBookResponse {
 		this.book = book;
 	}
 
-	public List<Comment> getComments() {
+	public List<GetBookResponseComment> getComments() {
 		return comments;
 	}
 
-	public void setComments(List<Comment> comments) {
+	public void setComments(List<GetBookResponseComment> comments) {
 		this.comments = comments;
 	}
 	
-	public void addComment(Comment comment) {
+	public void addComment(GetBookResponseComment comment) {
 		this.comments.add(comment);
 	}
 	

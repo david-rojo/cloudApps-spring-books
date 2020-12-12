@@ -10,11 +10,11 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,28 +22,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudapps.springbooks.model.api.BookSummaryResponse;
-import com.cloudapps.springbooks.model.api.GetBookResponse;
 import com.cloudapps.springbooks.model.api.PostBookRequest;
 import com.cloudapps.springbooks.model.api.PostCommentRequest;
+import com.cloudapps.springbooks.model.api.PostUserRequest;
+import com.cloudapps.springbooks.model.api.UpdateUserEmailRequest;
 import com.cloudapps.springbooks.model.entity.Book;
 import com.cloudapps.springbooks.model.entity.Comment;
+import com.cloudapps.springbooks.model.entity.User;
 import com.cloudapps.springbooks.service.BookService;
 import com.cloudapps.springbooks.service.CommentService;
+import com.cloudapps.springbooks.service.UserService;
 
 @RestController
-@RequestMapping (value="springbooks")
+@RequestMapping (value="springbooks/api/v2")
 public class RestApiController implements RestApi {
 
 	private Logger log = LoggerFactory.getLogger(RestApiController.class);
-	
-	@Value("${springbooks.config.startup.dataload}")
-	private String strStartupDataLoad;
 	
 	@Autowired
 	private BookService bookService;
 	
 	@Autowired
 	private CommentService commentsService;
+	
+	@Autowired
+	private UserService usersService;
 	
 	@GetMapping(value="books")
 	public ResponseEntity<List<BookSummaryResponse>> getBooks() {
@@ -55,32 +58,15 @@ public class RestApiController implements RestApi {
 	}
 	
 	@GetMapping(value="books/{bookId}")
-	public ResponseEntity<GetBookResponse> getBook(@PathVariable(value="bookId") Long bookId) {
+	public ResponseEntity<Book> getBook(@PathVariable(value="bookId") Long bookId) {
 		log.info("getBook method invoked");
 		log.info("parameters received => "
 				+ "\"bookId\" = " + bookId);
-		GetBookResponse response = new GetBookResponse();
 		Optional<Book> book = this.bookService.findById(bookId);
 		if (book.isPresent()) {
-			response.setBook(book.get());
-			this.commentsService.findAllCommentsByBook(bookId).forEach(comment -> response.addComment(comment));
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+			return ResponseEntity.status(HttpStatus.OK).body(book.get());
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);		
-	}
-	
-	@GetMapping(value="books/{bookId}/comments")
-	public ResponseEntity<List<Comment>> getCommentsFromBook(@PathVariable(value="bookId") Long bookId) {
-		log.info("getCommentsFromBook method invoked");
-		log.info("parameters received => "
-				+ "\"bookId\" = " + bookId);
-		if (this.bookService.findById(bookId).isPresent()) {
-			List<Comment> responseList = new ArrayList<>();
-			this.commentsService.findAllCommentsByBook(bookId)
-				.forEach(comment -> responseList.add(comment));
-			return ResponseEntity.status(HttpStatus.OK).body(responseList);	
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(List.of());				
 	}
 	
 	@PostMapping(value="books")
@@ -107,18 +93,21 @@ public class RestApiController implements RestApi {
 				+ "\"bookId\" = " + bookId + ", "
 				+ "\"postCommentRequest\" = " + postCommentRequest.toString());
 		if (this.commentsService.isScoreValid(postCommentRequest.getScore())) {
-			if (this.bookService.findById(Long.valueOf(bookId)).isPresent()) {
-				Comment savedComment = commentsService.save(new Comment(
-						postCommentRequest.getText(),
-						postCommentRequest.getUser(),
-						postCommentRequest.getScore())
-					, bookId);
-				URI location = fromCurrentRequest().path("/{id}")
-						.buildAndExpand(savedComment.getId()).toUri();
-				return ResponseEntity.created(location).body(savedComment);
-			} else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Comment.NON_EXISTENT_BOOKID_COMMENT);
-			}			
+
+			Book book = this.bookService.findById(bookId).orElseThrow();
+
+			Comment comment = new Comment(
+					postCommentRequest.getText(),
+					postCommentRequest.getUser(),
+					postCommentRequest.getScore());
+			
+			comment.setBook(book);
+			
+			this.commentsService.save(comment);			
+
+			URI location = fromCurrentRequest().path("/{id}")
+					.buildAndExpand(comment.getId()).toUri();
+			return ResponseEntity.created(location).body(comment);	
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Comment.INVALID_SCORE_COMMENT);
 		}
@@ -133,15 +122,53 @@ public class RestApiController implements RestApi {
 				+ "\"bookId\" = " + bookId + ", "
 				+ "\"commentId\" = " + commentId);
 		
-		Comment comment = commentsService.findById(bookId, commentId);
+		Comment comment = this.commentsService.findById(commentId).orElseThrow();
 		
-		if (comment != null) {
-			commentsService.deleteById(bookId, commentId);
-			return ResponseEntity.ok(comment);
+		this.commentsService.delete(comment);
+		
+		return ResponseEntity.ok(comment);
+	}
+
+	@PostMapping(value="users")
+	public ResponseEntity<User> postUser(PostUserRequest postUserRequest) {
+		
+		log.info("postUser method invoked");
+		
+		if (!this.usersService.isUserPresent(postUserRequest.getNick())) {
+			
+			User user = this.usersService.save(new User(
+					postUserRequest.getNick(),
+					postUserRequest.getEmail()));			
+
+			URI location = fromCurrentRequest().path("/{id}")
+					.buildAndExpand(user.getId()).toUri();
+			return ResponseEntity.created(location).body(user);	
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(User.EXISTING_NICK);
 		}
-		else {
-			return ResponseEntity.notFound().build();
-		}
-	}	
+	}
 	
+	@GetMapping(value="users/{userId}")
+	public ResponseEntity<User> getUser(@PathVariable(value="userId") Long userId){
+		
+		log.info("getUser method invoked");
+		
+		Optional<User> user = this.usersService.findById(userId);
+		if (user.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).body(user.get());
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	}
+	
+	@PatchMapping(path = "users/{userId}")
+	public ResponseEntity<User> updateUserEmail(@PathVariable long userId, @RequestBody UpdateUserEmailRequest request) {
+
+		Optional<User> user = this.usersService.findById(userId);
+		if (user.isPresent()) {
+			user.get().setEmail(request.getEmail());
+			User updatedUser = this.usersService.save(user.get());
+			return ResponseEntity.ok(updatedUser); 
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	}
 }

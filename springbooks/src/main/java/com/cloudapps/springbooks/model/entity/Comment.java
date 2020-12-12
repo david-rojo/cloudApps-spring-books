@@ -1,5 +1,14 @@
 package com.cloudapps.springbooks.model.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class Comment {
 	
 	public static Comment INVALID_SCORE_COMMENT = new Comment(
@@ -9,6 +18,8 @@ public class Comment {
 			"Any book in the system has as id the requested bookId, the comment must be associated to an existing book. "
 			+ "Please verify it", "", 0);
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	private String text;
@@ -17,7 +28,11 @@ public class Comment {
 	
 	private int score;
 	
-	public Comment() {
+	@ManyToOne
+	@JsonIgnore
+	private Book book;
+	
+	protected Comment() {
 		
 	}
 	
@@ -60,6 +75,14 @@ public class Comment {
 		this.score = score;
 	}
 
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
+	
 	@Override
 	public String toString() {
 		return "Comment [id=" + id + ", "
