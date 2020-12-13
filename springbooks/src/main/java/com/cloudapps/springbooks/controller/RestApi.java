@@ -15,10 +15,11 @@ import com.cloudapps.springbooks.model.api.request.PostCommentRequest;
 import com.cloudapps.springbooks.model.api.request.PostUserRequest;
 import com.cloudapps.springbooks.model.api.request.UpdateUserEmailRequest;
 import com.cloudapps.springbooks.model.api.response.BookSummaryResponse;
+import com.cloudapps.springbooks.model.api.response.DeleteCommentResponse;
 import com.cloudapps.springbooks.model.api.response.GetBookResponse;
 import com.cloudapps.springbooks.model.api.response.GetCommentsFromUserResponseElement;
+import com.cloudapps.springbooks.model.api.response.PostCommentResponse;
 import com.cloudapps.springbooks.model.entity.Book;
-import com.cloudapps.springbooks.model.entity.Comment;
 import com.cloudapps.springbooks.model.entity.User;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,11 +70,11 @@ public interface RestApi {
 			tags = { "books" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "comment successfully created",
-                content = @Content(schema = @Schema(implementation = Comment.class))),
+                content = @Content(schema = @Schema(implementation = PostCommentResponse.class))),
         @ApiResponse(responseCode = "400", description = "bad request"),
         @ApiResponse(responseCode = "500", description = "internal server error") })
 	@PostMapping(value="books/{bookId}/comments")
-	public ResponseEntity<Comment> postComment(@PathVariable(value="bookId") Long bookId,
+	public ResponseEntity<PostCommentResponse> postComment(@PathVariable(value="bookId") Long bookId,
 			@RequestBody PostCommentRequest postCommentRequest);
 	
 	@Operation(
@@ -82,10 +83,10 @@ public interface RestApi {
 			tags = { "books" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "comment successfully deleted",
-        		content = @Content(schema = @Schema(implementation = Comment.class))),
+        		content = @Content(schema = @Schema(implementation = DeleteCommentResponse.class))),
         @ApiResponse(responseCode = "404", description = "comment not found") })
 	@DeleteMapping(value="books/{bookId}/comments/{commentId}")
-	public ResponseEntity<Comment> deleteComment(
+	public ResponseEntity<DeleteCommentResponse> deleteComment(
 			@PathVariable(value="bookId") Long bookId, 
 			@PathVariable(value="commentId") Long commentId);
 

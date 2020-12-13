@@ -12,7 +12,7 @@ public class User {
 			"Invalid nick. This nick exists in database", "");
 	
 	public static User USER_WITH_COMMENTS = new User(
-			"The requested user has comments, is not possible to delete it. Please remove comments first", "");
+			"The requested user has comments, is not possible to delete it. Please remove his comments first", "");
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

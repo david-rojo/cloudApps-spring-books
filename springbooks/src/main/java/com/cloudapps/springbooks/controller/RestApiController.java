@@ -26,9 +26,11 @@ import com.cloudapps.springbooks.model.api.request.PostCommentRequest;
 import com.cloudapps.springbooks.model.api.request.PostUserRequest;
 import com.cloudapps.springbooks.model.api.request.UpdateUserEmailRequest;
 import com.cloudapps.springbooks.model.api.response.BookSummaryResponse;
+import com.cloudapps.springbooks.model.api.response.DeleteCommentResponse;
 import com.cloudapps.springbooks.model.api.response.GetBookResponse;
 import com.cloudapps.springbooks.model.api.response.GetBookResponseComment;
 import com.cloudapps.springbooks.model.api.response.GetCommentsFromUserResponseElement;
+import com.cloudapps.springbooks.model.api.response.PostCommentResponse;
 import com.cloudapps.springbooks.model.entity.Book;
 import com.cloudapps.springbooks.model.entity.Comment;
 import com.cloudapps.springbooks.model.entity.User;
@@ -101,39 +103,49 @@ public class RestApiController implements RestApi {
 	}
 	
 	@PostMapping(value="books/{bookId}/comments")
-	public ResponseEntity<Comment> postComment(@PathVariable(value="bookId") Long bookId,
+	public ResponseEntity<PostCommentResponse> postComment(@PathVariable(value="bookId") Long bookId,
 			@RequestBody PostCommentRequest postCommentRequest) {
 		log.info("postComment method invoked");
 		log.info("parameters received => "
 				+ "\"bookId\" = " + bookId + ", "
 				+ "\"postCommentRequest\" = " + postCommentRequest.toString());
 		if (this.commentsService.isScoreValid(postCommentRequest.getScore())) {
+			
+			Optional<User> user = this.usersService.findByNick(postCommentRequest.getNick());
 
-			if (this.usersService.isUserPresent(postCommentRequest.getNick())) {
+			if (user.isPresent()) {
 				Book book = this.bookService.findById(bookId).orElseThrow();
 
 				Comment comment = new Comment(
 						postCommentRequest.getText(),
 						postCommentRequest.getScore());
 
-				comment.setBook(book);
+				comment.setBook(book);				
+				comment.setUser(user.get());
 
 				this.commentsService.save(comment);			
 
 				URI location = fromCurrentRequest().path("/{id}")
 						.buildAndExpand(comment.getId()).toUri();
-				return ResponseEntity.created(location).body(comment);	
+				
+				PostCommentResponse response = new PostCommentResponse(
+						comment.getId(),
+						comment.getText(),
+						comment.getUser().getNick(),
+						comment.getScore());
+				
+				return ResponseEntity.created(location).body(response);	
 			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Comment.NON_EXISTENT_NICK_COMMENT);
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PostCommentResponse.NON_EXISTENT_NICK_COMMENT);
 			}
 
 		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Comment.INVALID_SCORE_COMMENT);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PostCommentResponse.INVALID_SCORE_COMMENT);
 		}
 	}
 	
 	@DeleteMapping(value="books/{bookId}/comments/{commentId}")
-	public ResponseEntity<Comment> deleteComment(
+	public ResponseEntity<DeleteCommentResponse> deleteComment(
 			@PathVariable(value="bookId") Long bookId, 
 			@PathVariable(value="commentId") Long commentId) {
 		log.info("deleteComment method invoked");
@@ -145,7 +157,13 @@ public class RestApiController implements RestApi {
 		
 		this.commentsService.delete(comment);
 		
-		return ResponseEntity.ok(comment);
+		DeleteCommentResponse response = new DeleteCommentResponse(
+				comment.getId(), 
+				comment.getText(), 
+				comment.getUser().getNick(), 
+				comment.getScore());
+		
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping(value="users")

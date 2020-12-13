@@ -54,4 +54,8 @@ public class UserService {
 	public void delete(User user) {
 		this.users.delete(user);
 	}
+	
+	public Optional<User> findByNick(String nick) {
+		return this.users.findByNick(nick);
+	}
 }
