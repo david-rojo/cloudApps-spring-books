@@ -22,7 +22,7 @@ Once we have it ready, we launch the application:
 mvn spring-boot:run
 ```
 
-### 3. OpenApi GUI:
+## 3. OpenApi GUI:
 
 [http://localhost:8080/springbooks-manager-api.html](http://localhost:8080/springbooks-manager-api.html)
 
