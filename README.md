@@ -18,7 +18,7 @@ Before deploy the application, is needed to has a available MySQL database, the 
 $ docker run --rm -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=books -p 3306:3306 -d --name mysql-springbooks mysql:8.0.22
 ```
 
-Also is required to create the ```books``` schema in MySQL database, this action can be performed using [MySQL Workbech](https://www.mysql.com/products/workbench).
+Also is required to create the ```books``` schema in MySQL database, this action can be performed using [MySQL Workbench](https://www.mysql.com/products/workbench).
 
 Once we have it ready, we launch the application:
 
