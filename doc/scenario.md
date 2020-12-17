@@ -1,30 +1,21 @@
 # Springbooks scenario
 
-It is requested to implement a web application with a list of books and reviews of each book. This application must has the following functionalities:
+It is requested to implement a new version of the application that was implemented in ```01-rest-api``` branch of current repo that covered this [scenario](https://github.com/david-rojo/cloudApps-spring-books/blob/01-web-restapi/doc/scenario.md).
 
-* The webpage will be able to manage many books.
-* In the main page will appear the book titles.
-* Every book title will be a link that when it will be clicked, a webpage will be open where it will be shown the book content (title, summary, author, publisher and publication year).
-* In the main page will be a link that when it will be clicked, a webpage to create a new book will be shown.
-* Every book could have comments associated that they will be shown below of its content with a score between 0 and 5.
-* In order to be able to create a comment, below of the book content will be shown a form to fill user, comment and score.
-* When a user has previously created a comment and is going to create another one, its name will appear preloaded in the form.
-* Every comment will be shown with a delete button that will allow to delete it.
-* There is not any type of access control. Anyone could create new boocks or comments. Anyone could delete any comment.
+These are the requirements for new version:
 
-In addition to the web interface, the application will also export a REST API. This REST API
-will have the following operations:
-
-* Retrieve a list with the id and the title of each book (but not the other attributes of a book).
-* Retrieve the information from a book (comments included).
-* Create a book.
-* Create a comment associated to a book.
-* Delete a comment.
-
-From a technical point of view, it will be taken in account the following aspects:
-
-* Information is stored in memory, any persistence will be implemented.
-* Web application will be implemented with Java 8 (or higher) and SpringBoot 2.4.0 (or higher).
-* Is not needed to worry about the design of the web, it is enough that it is functional.
-* Make sure that two simultaneous requests to manage comments on the same book do not have concurrency problems.
-* REST API must comply with maturity level 2 and the format of the URLs must identify resources, not actions. The name of the resource should appear in plural and in English.
+* Add persistency with Spring Data and MySQL.
+* Delete the web inteface:
+  * Delete static files, templates and it dependency located in ```pom.xml```
+  * Delete web controller
+  * Delete any web resource
+* Users that create comments are now an entity (User) with properties nick and email. Nick must be unique.
+* New REST API operations:
+  * CRUD endpoints to manage users: create, read, update email and delete operations. Only a user without comments can be deleted.
+  * Include one endpoint to retrieve all comments of a specific user. In this case, every comment must contains the id of the book that comment.
+* Changes in existing REST operations:
+  * When a book is retrieved, all its comments must be returned. The comments must contain comment text and user nick and email.
+  * When a comment is created, the nick of the user must be provided.
+* Documentation:
+  * Postman collection must be updated with examples for testing the REST API.
+  * OpenAPI documentation must be updated, including the new operations.
