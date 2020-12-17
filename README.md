@@ -20,6 +20,8 @@ $ docker run --rm -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=books -p 330
 
 Also is required to create the ```books``` schema in MySQL database, this action can be performed using [MySQL Workbench](https://www.mysql.com/products/workbench).
 
+On springbooks server startup two books and one user is created in MySQL schema that has been created in previous step.
+
 Once we have it ready, we launch the application:
 
 ```
