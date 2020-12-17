@@ -23,7 +23,7 @@ Also is required to create the ```books``` schema in MySQL database, this action
 Once we have it ready, we launch the application:
 
 ```
-mvn spring-boot:run
+$ mvn spring-boot:run
 ```
 
 ## Testing
