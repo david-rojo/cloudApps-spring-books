@@ -15,7 +15,7 @@ $ mvn clean install
 Before deploy the application, is needed to has a available MySQL database, the most easy way is with [docker](https://www.docker.com/) executing the following command:
 
 ```
-$ docker run --rm -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=posts -p 3306:3306 -d --name mysql-springbooks mysql:8.0.22
+$ docker run --rm -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=books -p 3306:3306 -d --name mysql-springbooks mysql:8.0.22
 ```
 
 Also is required to create the ```books``` schema in MySQL database, this action can be performed using [MySQL Workbech](https://www.mysql.com/products/workbench).
