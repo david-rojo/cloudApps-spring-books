@@ -7,6 +7,7 @@ It implements the following [scenario](doc/scenario.md). It has been developed u
 ## Installation
 
 ```
+$ cd springbooks
 $ mvn clean install
 ```
 
