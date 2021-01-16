@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  springbooks-mysql:
+    image: mysql:8.0.22
+    expose: 
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=books
+    ports:
+      - "3306:3306"
+    hostname: springbooks-mysql
+    container_name: springbooks-mysql
+    stdin_open: true
+    tty: true
+    networks:
+      - springbooks
+
+networks:
+  springbooks:
+    driver: bridge
