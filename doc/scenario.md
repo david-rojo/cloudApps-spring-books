@@ -4,7 +4,7 @@ It is requested to implement a new version of the application that was implement
 
 These are the requirements for new version:
 
-* Use https instead of https. A self signed certificate is enough and it can be generated.
+* Use https instead of http. A self signed certificate is enough and it can be generated.
   
   ```
   sudo keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass password -validity 360 -keysize 2048
