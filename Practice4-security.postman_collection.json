@@ -263,12 +263,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:8443/login",
-							"protocol": "https",
+							"raw": "{{baseUrl}}/login",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "8443",
 							"path": [
 								"login"
 							]
@@ -305,12 +303,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:8443/api/v1/users/me",
-							"protocol": "https",
+							"raw": "{{baseUrl}}/api/v1/users/me",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "8443",
 							"path": [
 								"api",
 								"v1",
@@ -779,7 +775,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\": \"user3\",\n    \"password\": \"mypassword\",\n    \"email\": \"user3@email.es\"\n}"
+									"raw": "{\n    \"username\": \"user4\",\n    \"password\": \"mypassword\",\n    \"email\": \"user4@email.es\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/api/v1/users/",
