@@ -37,7 +37,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
 		String token = request.getHeader(Constants.HEADER_AUTHORIZATION_KEY);
 		if (token != null) {
-			// Se procesa el token y se recupera el usuario.
+			//Token is processed and user is retrieved
 			String user = Jwts.parser()
 						.setSigningKey(Constants.SUPER_SECRET_KEY)
 						.parseClaimsJws(token.replace(Constants.TOKEN_BEARER_PREFIX, ""))

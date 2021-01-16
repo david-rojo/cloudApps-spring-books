@@ -40,18 +40,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         
-        //http.authorizeRequests().antMatchers("/logout").permitAll();
-        //http.authorizeRequests().antMatchers("/api/v1/books/**").permitAll();
-        
 		/*
-		 * 1. Se desactiva el uso de cookies
-		 * 2. Se activa la configuración CORS con los valores por defecto
-		 * 3. Se desactiva el filtro CSRF
-		 * 4. Se indica que el login no requiere autenticación
-		 * 5. Se indica que el resto de URLs esten securizadas
+		 * 1. Disable cookies usage
+		 * 2. Enable CORS configuration with default values
+		 * 3. Disable CSRF filter
+		 * 4. Specify not needed authentication endpoints
+		 * 5. Any other URL is secured, authentication is needed
 		 */
-		//httpSecurity.authorizeRequests().antMatchers("/").permitAll();
-		//httpSecurity.csrf().disable();
 		http
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.cors().and().csrf().disable()
@@ -70,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// Se define la clase que recupera los usuarios y el algoritmo para procesar las passwords
+		// Define the class that recover the users and the algorithm to process paswords
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 
