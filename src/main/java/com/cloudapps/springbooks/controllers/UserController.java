@@ -1,6 +1,7 @@
 package com.cloudapps.springbooks.controllers;
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +19,10 @@ import com.cloudapps.springbooks.dtos.requests.UpdateUserEmailRequestDto;
 import com.cloudapps.springbooks.dtos.requests.UserRequestDto;
 import com.cloudapps.springbooks.dtos.responses.UserCommentResponseDto;
 import com.cloudapps.springbooks.dtos.responses.UserResponseDto;
+import com.cloudapps.springbooks.dtos.responses.WhoamiResponseDto;
+import com.cloudapps.springbooks.security.Constants;
 import com.cloudapps.springbooks.services.CommentService;
+import com.cloudapps.springbooks.services.JwtService;
 import com.cloudapps.springbooks.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,10 +39,12 @@ public class UserController {
 
     private UserService userService;
     private CommentService commentService;
+    private JwtService jwtService;
 
-    public UserController(UserService userService, CommentService commentService) {
+    public UserController(UserService userService, CommentService commentService, JwtService jwtService) {
         this.userService = userService;
         this.commentService = commentService;
+        this.jwtService = jwtService;
     }
 
     @Operation(summary = "Get all users")
@@ -126,6 +133,28 @@ public class UserController {
     public Collection<UserCommentResponseDto> getUserComments(@Parameter(description = "id of user to get comments")
                                                               @PathVariable long userId) {
         return this.commentService.getComments(userId);
+    }
+    
+    @Operation(summary = "Get the username of the token sent")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the user",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = WhoamiResponseDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid request",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)})
+    @GetMapping("/me")
+    public WhoamiResponseDto whoami(@RequestHeader Map<String, String> headers) {
+    	String authHeader = headers.get(Constants.HEADER_AUTHORIZATION_KEY.toLowerCase());
+    	if (authHeader != null) {
+    		if (this.jwtService.isValid(authHeader)) {
+    			return this.jwtService.getUser(authHeader);
+    		}
+    	} 
+    	return WhoamiResponseDto.builder()
+    			.username("Some error happened. Please check logs")
+    			.build();
     }
 
 }

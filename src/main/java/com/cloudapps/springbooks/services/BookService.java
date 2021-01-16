@@ -13,5 +13,9 @@ public interface BookService {
     BookDetailsResponseDto save(BookRequestDto bookRequestDto);
 
     BookDetailsResponseDto findById(long bookId);
+    
+    Collection<BookDetailsResponseDto> findAllWithDetails();
+    
+    BookDetailsResponseDto delete(long bookId);
 
 }

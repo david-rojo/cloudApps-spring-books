@@ -34,7 +34,11 @@ public class UserServiceImpl implements UserService {
 
     public Collection<UserResponseDto> findAll() {
         return this.userRepository.findAll().stream()
-                .map(user -> this.mapper.map(user, UserResponseDto.class))
+                .map(user -> UserResponseDto.builder()
+            			.id(user.getId())
+            			.username(user.getUsername())
+            			.email(user.getEmail())
+            			.build())
                 .collect(Collectors.toList());
     }
 
@@ -45,12 +49,20 @@ public class UserServiceImpl implements UserService {
         User user = this.mapper.map(userRequestDto, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user = this.userRepository.save(user);
-        return this.mapper.map(user, UserResponseDto.class);
+        return UserResponseDto.builder()
+        		.id(user.getId())
+        		.username(user.getUsername())
+        		.email(user.getEmail())
+        		.build();
     }
 
     public UserResponseDto findById(long userId) {
-        User user = this.userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return this.mapper.map(user, UserResponseDto.class);
+    	User user = this.userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    	return UserResponseDto.builder()
+    			.id(user.getId())
+    			.username(user.getUsername())
+    			.email(user.getEmail())
+    			.build();
     }
 
     public UserResponseDto updateEmail(long userId, UpdateUserEmailRequestDto updateUserEmailRequestDto) {
@@ -59,7 +71,11 @@ public class UserServiceImpl implements UserService {
             user.setEmail(updateUserEmailRequestDto.getEmail());
             user = this.userRepository.save(user);
         }
-        return this.mapper.map(user, UserResponseDto.class);
+        return UserResponseDto.builder()
+    			.id(user.getId())
+    			.username(user.getUsername())
+    			.email(user.getEmail())
+    			.build();
     }
 
     public UserResponseDto delete(long userId) {
@@ -68,7 +84,11 @@ public class UserServiceImpl implements UserService {
             throw new UserCanNotBeDeletedException();
         }
         this.userRepository.delete(user);
-        return this.mapper.map(user, UserResponseDto.class);
+        return UserResponseDto.builder()
+    			.id(user.getId())
+    			.username(user.getUsername())
+    			.email(user.getEmail())
+    			.build();
     }
 
 }

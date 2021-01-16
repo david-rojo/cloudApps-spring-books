@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class UserDetailsImpl implements UserDetails {
 	
+	private static final long serialVersionUID = -7475530265335352197L;
+
 	@Override	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub

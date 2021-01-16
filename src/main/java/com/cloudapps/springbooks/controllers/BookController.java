@@ -1,15 +1,19 @@
 package com.cloudapps.springbooks.controllers;
 
-import java.util.Collection;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudapps.springbooks.dtos.requests.BookRequestDto;
@@ -17,8 +21,10 @@ import com.cloudapps.springbooks.dtos.requests.CommentRequestDto;
 import com.cloudapps.springbooks.dtos.responses.BookDetailsResponseDto;
 import com.cloudapps.springbooks.dtos.responses.BookResponseDto;
 import com.cloudapps.springbooks.dtos.responses.CommentResponseDto;
+import com.cloudapps.springbooks.security.Constants;
 import com.cloudapps.springbooks.services.BookService;
 import com.cloudapps.springbooks.services.CommentService;
+import com.cloudapps.springbooks.services.JwtService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,20 +40,12 @@ public class BookController {
 
     private BookService bookService;
     private CommentService commentService;
+    private JwtService jwtService;
 
-    public BookController(BookService bookService, CommentService commentService) {
+    public BookController(BookService bookService, CommentService commentService, JwtService jwtService) {
         this.bookService = bookService;
         this.commentService = commentService;
-    }
-
-    @Operation(summary = "Get all books")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found all books",
-                    content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = BookResponseDto.class)))})})
-    @GetMapping("/")
-    public Collection<BookResponseDto> getBooks() {
-        return this.bookService.findAll();
+        this.jwtService = jwtService;
     }
 
     @Operation(summary = "Get a book by its id")
@@ -114,6 +112,40 @@ public class BookController {
                                             @Parameter(description = "id of comment to be deleted")
                                             @PathVariable long commentId) {
         return this.commentService.deleteComment(bookId, commentId);
+    }
+    
+    @Operation(summary = "Get all books")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found all books",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = BookResponseDto.class)))})})
+    @GetMapping("/")
+    @ResponseBody
+    public ResponseEntity<?> getBooks(@RequestHeader Map<String, String> headers) {
+    	String authHeader = headers.get(Constants.HEADER_AUTHORIZATION_KEY.toLowerCase());
+    	if (authHeader != null) {
+    		if (jwtService.isValid(authHeader)) {
+    			return new ResponseEntity<>(this.bookService.findAllWithDetails(), HttpStatus.OK);
+    		}
+    	}
+        
+    	//user not registered or without valid token
+        return new ResponseEntity<>(this.bookService.findAll(), HttpStatus.OK);   
+    }
+    
+    @Operation(summary = "Delete a book")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete a book and its comments",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommentResponseDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid format id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Book not found with passed bookId",
+                    content = @Content)})
+    @DeleteMapping("/{bookId}")
+    public BookDetailsResponseDto deleteBook(@Parameter(description = "identifier of the book to which the comment belongs")
+                                            @PathVariable long bookId) {
+        return this.bookService.delete(bookId);
     }
 
 }
