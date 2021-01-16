@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 public class UserRequestDto {
 
-    @NotBlank(message = "Nick is mandatory")
-    private String nick;
+    @NotBlank(message = "Username is mandatory")
+    private String username;
     
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Invalid email")

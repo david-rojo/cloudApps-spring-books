@@ -11,8 +11,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class CommentRequestDto {
 
-    @NotBlank(message = "User nick is mandatory")
-    private String userNick;
+    @NotBlank(message = "Username is mandatory")
+    private String username;
     @NotBlank(message = "Comment is mandatory")
     private String comment;
     @Min(value = 0, message = "Score must be equals or greater than 0")

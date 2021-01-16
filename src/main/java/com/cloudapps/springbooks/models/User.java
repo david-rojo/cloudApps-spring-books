@@ -26,10 +26,13 @@ public class User {
 	private Long id;
 
 	@Column(nullable = false, unique = true)
-	private String nick;
+	private String username;
 	
 	@Column(nullable = false)
-	private String email;	
+	private String email;
+	
+	@Column(nullable = false)
+	private String password;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Collection<Comment> comments = Collections.emptyList();

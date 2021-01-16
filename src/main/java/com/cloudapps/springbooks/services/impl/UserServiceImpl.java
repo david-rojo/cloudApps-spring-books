@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.dozer.Mapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cloudapps.springbooks.dtos.requests.UpdateUserEmailRequestDto;
@@ -13,7 +14,7 @@ import com.cloudapps.springbooks.dtos.requests.UserRequestDto;
 import com.cloudapps.springbooks.dtos.responses.UserResponseDto;
 import com.cloudapps.springbooks.exceptions.UserCanNotBeDeletedException;
 import com.cloudapps.springbooks.exceptions.UserNotFoundException;
-import com.cloudapps.springbooks.exceptions.UserWithSameNickException;
+import com.cloudapps.springbooks.exceptions.UserWithSameUsernameException;
 import com.cloudapps.springbooks.models.User;
 import com.cloudapps.springbooks.repositories.UserRepository;
 import com.cloudapps.springbooks.services.UserService;
@@ -23,10 +24,12 @@ public class UserServiceImpl implements UserService {
 
     private Mapper mapper;
     private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserServiceImpl(Mapper mapper, UserRepository userRepository) {
+    public UserServiceImpl(Mapper mapper, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.mapper = mapper;
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public Collection<UserResponseDto> findAll() {
@@ -36,10 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserResponseDto save(UserRequestDto userRequestDto) {
-        if (this.userRepository.existsByNick(userRequestDto.getNick())) {
-            throw new UserWithSameNickException();
+        if (this.userRepository.existsByUsername(userRequestDto.getUsername())) {
+            throw new UserWithSameUsernameException();
         }
         User user = this.mapper.map(userRequestDto, User.class);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user = this.userRepository.save(user);
         return this.mapper.map(user, UserResponseDto.class);
     }

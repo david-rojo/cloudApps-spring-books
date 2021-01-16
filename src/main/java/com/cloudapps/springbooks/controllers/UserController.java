@@ -75,7 +75,7 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDto.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid user attributes supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "409", description = "Already exists an user with same nick",
+            @ApiResponse(responseCode = "409", description = "Already exists an user with same username",
                     content = @Content)})
     @PostMapping("/")
     public UserResponseDto createUser(@Valid @RequestBody UserRequestDto userRequestDto) {

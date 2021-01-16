@@ -8,8 +8,8 @@ import com.cloudapps.springbooks.models.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    boolean existsByNick(String nick);
+    boolean existsByUsername(String username);
 
-    Optional<User> findByNick(String nick);
+    Optional<User> findByUsername(String username);
 
 }
