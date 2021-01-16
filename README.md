@@ -57,7 +57,7 @@ Both users has the same password: ```password``` but appears encoded, as it is s
 
 ## Testing the application
 
-A [Postman](https://www.postman.com/) collection is provided in the current repository [Practice4-security.postman_collection.json](Practice4-security.postman_collection.json) to easily play and test the application.
+A [Postman](https://www.postman.com/) collection is provided in the current repository [Practice4-security-spring.postman_collection.json](Practice4-security-spring.postman_collection.json) to easily play and test the application.
 
 It contains all needed data to test each endpoint immediately but you have to define these environment variables:
 
