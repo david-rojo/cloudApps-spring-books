@@ -85,3 +85,7 @@ Exposes the login endpoint needed to get a JWT in order to  be able to execute t
 ### api/v1
 
 ![POSTMAN API](doc/img/postman-users-books.jpg)
+
+## Author
+
+[David Rojo(@david-rojo)](https://github.com/david-rojo)
