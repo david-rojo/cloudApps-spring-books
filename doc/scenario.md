@@ -1,21 +1,19 @@
 # Springbooks scenario
 
-It is requested to implement a new version of the application that was implemented in ```01-rest-api``` branch of current repo that covered this [scenario](https://github.com/david-rojo/cloudApps-spring-books/blob/01-web-restapi/doc/scenario.md).
+It is requested to implement a new version of the application that was implemented in ```02-restapi-db``` branch of current repo that covered this [scenario](https://github.com/david-rojo/cloudApps-spring-books/blob/02-restapi-db/doc/scenario.md).
 
 These are the requirements for new version:
 
-* Add persistency with Spring Data and MySQL.
-* Delete the web inteface:
-  * Delete static files, templates and it dependency located in ```pom.xml```
-  * Delete web controller
-  * Delete any web resource
-* Users that create comments are now an entity (User) with properties nick and email. Nick must be unique.
-* New REST API operations:
-  * CRUD endpoints to manage users: create, read, update email and delete operations. Only a user without comments can be deleted.
-  * Include one endpoint to retrieve all comments of a specific user. In this case, every comment must contains the id of the book that comment.
-* Changes in existing REST operations:
-  * When a book is retrieved, all its comments must be returned. The comments must contain comment text and user nick and email.
-  * When a comment is created, the nick of the user must be provided.
-* Documentation:
-  * Postman collection must be updated with examples for testing the REST API.
-  * OpenAPI documentation must be updated, including the new operations.
+* Use https instead of https. A self signed certificate is enough and it can be generated.
+  
+  ```
+  sudo keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass password -validity 360 -keysize 2048
+  ```
+  
+* There are two types of users: registered users and not registered (anonymous)
+* Registered users can execute any operation.
+* Not registered users only can:
+  * retrieve a list with the id and the title of each book (but not the other information of the book, so also modify these method in order that registered users can retrieve all book information).
+  * Create users.
+* Define/provide needed endpoints for books management. These endpoints only can be executed by registered users.
+* In these endpoints any CRUD operation can be executed. In case of books with comments delete, the comments will be deleted too in the database.
