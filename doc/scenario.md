@@ -1,6 +1,6 @@
 # Springbooks scenario
 
-It is requested to implement a new version of the application that was implemented in ```01-rest-api``` branch of current repo that covered this [scenario](https://github.com/david-rojo/cloudApps-spring-books/blob/01-web-restapi/doc/scenario.md).
+It is requested to implement a new version of the application that was implemented in ```01-web-restapi``` branch of current repo that covered this [scenario](https://github.com/david-rojo/cloudApps-spring-books/blob/01-web-restapi/doc/scenario.md).
 
 These are the requirements for new version:
 
