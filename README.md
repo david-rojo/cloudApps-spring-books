@@ -59,7 +59,7 @@ Both users has the same password: ```password``` but appears encoded, as it is s
 
 A [Postman](https://www.postman.com/) collection is provided in the current repository [Practice4-security-spring.postman_collection.json](Practice4-security-spring.postman_collection.json) to easily play and test the application.
 
-It contains all needed data to test each endpoint immediately but you have to define these environment variables:
+It contains all needed data to test each endpoint immediately but you have to set value of these environment variables (Edit the collection and set them in Variables tab):
 
 | NAME     | VALUE                                                    |
 |----------|----------------------------------------------------------|
