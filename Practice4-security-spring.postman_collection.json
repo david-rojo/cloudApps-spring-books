@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "c5cb0069-ed06-414b-8b69-561946ee4555",
-		"name": "Practice 4 - security",
+		"name": "Practice 4 - security spring",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -2059,6 +2059,10 @@
 		{
 			"key": "baseUrl",
 			"value": "https://localhost:8443"
+		},
+		{
+			"key": "jwtToken",
+			"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MTA4MjU1ODksImlzcyI6IndoYXRldmVyIiwic3ViIjoidXNlcjEiLCJleHAiOjE2MTE2ODk1ODl9.6RGhiUHubQUZXKQJrC6-iA0ha6EOGqM9bw_QGMS_SH3U3HN0U2tU0bRv9Ei04kpy-RGLVW6t9CCtLv7MEOQ2sQ"
 		}
 	]
 }
