@@ -139,22 +139,14 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the user",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = WhoamiResponseDto.class))}),
+                            schema = @Schema(implementation = UserResponseDto.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid request",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content)})
     @GetMapping("/me")
-    public WhoamiResponseDto whoami(@RequestHeader Map<String, String> headers) {
-    	String authHeader = headers.get(Constants.HEADER_AUTHORIZATION_KEY.toLowerCase());
-    	if (authHeader != null) {
-    		if (this.jwtService.isValid(authHeader)) {
-    			return this.jwtService.getUser(authHeader);
-    		}
-    	} 
-    	return WhoamiResponseDto.builder()
-    			.username("Some error happened. Please check logs")
-    			.build();
+    public UserResponseDto whoami(@RequestHeader Map<String, String> headers) {
+    	return this.jwtService.getUser(headers.get(Constants.HEADER_AUTHORIZATION_KEY.toLowerCase()));
     }
 
 }

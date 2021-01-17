@@ -91,4 +91,13 @@ public class UserServiceImpl implements UserService {
     			.build();
     }
 
+    public UserResponseDto findByUsername(String username) {
+    	User user = this.userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+    	return UserResponseDto.builder()
+    			.id(user.getId())
+    			.username(user.getUsername())
+    			.email(user.getEmail())
+    			.build();
+    }
+
 }

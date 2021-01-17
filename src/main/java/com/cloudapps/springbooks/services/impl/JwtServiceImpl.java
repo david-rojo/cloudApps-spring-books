@@ -10,9 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.cloudapps.springbooks.dtos.responses.WhoamiResponseDto;
+import com.cloudapps.springbooks.dtos.responses.UserResponseDto;
+import com.cloudapps.springbooks.exceptions.InvalidTokenException;
+import com.cloudapps.springbooks.exceptions.NotAuthorizationHeaderPresentException;
+import com.cloudapps.springbooks.exceptions.UserNotFoundException;
 import com.cloudapps.springbooks.security.Constants;
 import com.cloudapps.springbooks.services.JwtService;
+import com.cloudapps.springbooks.services.UserService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,18 +25,38 @@ import io.jsonwebtoken.Jwts;
 public class JwtServiceImpl implements JwtService {
 
 	private Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
+	
+	private UserService userService;
+	
+	public JwtServiceImpl(UserService userService) {
+        this.userService = userService;
+    }
 
-	public WhoamiResponseDto getUser(String authHeader) {
+	public UserResponseDto getUser(String authHeader) {
+    	if (authHeader != null) {
+    		if (this.isValid(authHeader)) {
+    			Optional<String> username = this.getUsername(authHeader);
+    			if (username.isPresent()) {
+    				return this.userService.findByUsername(username.get());
+    			}
+    			else {
+    				throw new UserNotFoundException();
+    			}
+    		}
+    		else {
+    			throw new InvalidTokenException();
+    		}
+    	}
+    	throw new NotAuthorizationHeaderPresentException();
+	}
+	
+	public Optional<String> getUsername(String authHeader) {
 		String jwt = this.getJwt(authHeader);
 		Optional<Claims> claims = this.decodeJWT(jwt);
 		if (!claims.isEmpty()) {
-			return WhoamiResponseDto.builder()
-					.username(claims.get().getSubject())
-					.build();
+			return Optional.of(claims.get().getSubject());
 		}
-		return WhoamiResponseDto.builder()
-				.username("user not detected in JWT")
-				.build();
+		return Optional.empty();
 	}
 	
 	
