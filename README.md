@@ -78,7 +78,7 @@ Exposes the operations that the not registered users can execute: create a user 
 
 ### auth
 
-Exposes the login endpoint needed to get a JWT in order to  be able to execute the requests of **api/v1** folder and also the Who am I request that query the ```/me``` endpoint that receives a token in headers and returns the username of the query.
+Exposes the login endpoint needed to get a JWT in order to  be able to execute the requests of **api/v1** folder and also the Who am I request that query the ```/me``` endpoint that receives a token in headers and returns the data of the user in the token.
 
 ![POSTMAN AUTH](doc/img/postman-auth.jpg)
 
