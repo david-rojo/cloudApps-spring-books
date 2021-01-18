@@ -27,7 +27,7 @@ The running database has these connection details:
 mvn spring-boot:run
 ```
 
-When the application is deployed the following data are loaded in tables of ```books``` database:
+When the application is deployed the following data are loaded (in order to check database content is recommended to user some MySQL client like [MySQL Workbench](https://www.mysql.com/products/workbench/)) in tables of ```books``` database:
 
 ### books
 
