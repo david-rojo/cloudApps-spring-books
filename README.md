@@ -53,7 +53,7 @@ Both users has the same password: ```password``` but appears encoded, as it is s
 | 2  | user2@email.es | $2a$10$XURPShQNCsLjp1ESc2laoObo9QZDhxz73hJPaEv7/cBha4pk0AgP. | user2    |
 
 
-**Also when the application is stopped**, the information loaded is deleted in the database providing a clean scenario everytime the application is launched.
+**If you have the application running and you stop and start it, all existing data in database are overwriiten by previously described data**, providing in each application start a clean environmment.
 
 ## Testing the application
 
