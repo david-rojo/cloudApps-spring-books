@@ -1452,7 +1452,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"comment\": \"Book 1 comment\",\n    \"userNick\": \"user1\",\n    \"score\": 2.2\n}"
+									"raw": "{\n    \"comment\": \"Book 1 comment\",\n    \"username\": \"user1\",\n    \"score\": 2.2\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/api/v1/books/1/comments/",
