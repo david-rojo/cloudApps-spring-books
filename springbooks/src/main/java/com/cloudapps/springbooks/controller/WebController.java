@@ -27,7 +27,7 @@ import com.cloudapps.springbooks.service.UserSession;
 @Controller
 public class WebController {
 
-	private Logger log = LoggerFactory.getLogger(RestApiController.class);
+	private Logger log = LoggerFactory.getLogger(WebController.class);
 	
 	@Autowired
 	private UserSession userSession;
